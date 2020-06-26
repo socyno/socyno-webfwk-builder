@@ -59,7 +59,8 @@ cd "$(dirname $0)" && \
     echo "cd '$WORKSPACE/socyno-webfwk-app' && mvn -s '$MVNSETTINGS' clean install || exit \$?" >> "$BUILDSCRIPT" && \
     echo "cp -f target/socyno-webfwk-app-*.war '$WORKSPACE/webfwk.war' || exit \$?" >>"$BUILDSCRIPT" && \
     docker run --rm -it -u root -v "$WORKSPACE:$WORKSPACE" maven:3.6.3-jdk-8 /bin/sh "$BUILDSCRIPT" && \
-    cd "$WORKDIR/docker" && cp "$WORKSPACE/webfwk.war" . && docker build -t socyno.org/webfwk .
+    cd "$WORKDIR/docker" && cp "$WORKSPACE/webfwk.war" . && \
+    docker build -t socyno.org/webfwk -t socyno.org/webfwk-static-$(date '+%Y-%m-%d_%H:%M:%S') .
 STATUS=$?
 rm -f webfwk.war
 exit $STATUS

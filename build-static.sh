@@ -18,7 +18,8 @@ cd "$(dirname $0)" && \
     echo 'yarn install --ignore-optional && npm install --dev && npm run build || exit $?' >> "$BUILDSCRIPT" && \
     echo "tar -cf '$WORKSPACE/webfwk-static.tar' dist/* || exit \$?" >> "$BUILDSCRIPT" && \
     docker run --rm -it -u root -v "$WORKSPACE:$WORKSPACE" node:12.18.1-alpine /bin/sh "$BUILDSCRIPT" && \
-    cd "$WORKDIR/docker" && cp -f "$WORKSPACE/webfwk-static.tar" . && docker build -t socyno.org/webfwk-static -f Dockerfile-static .
+    cd "$WORKDIR/docker" && cp -f "$WORKSPACE/webfwk-static.tar" . && \
+    docker build -t socyno.org/webfwk-static -t socyno.org/webfwk-static-$(date '+%Y-%m-%d_%H:%M:%S')  -f Dockerfile-static .
 STATUS=$?
 rm -f webfwk-static.tar
 exit $STATUS
