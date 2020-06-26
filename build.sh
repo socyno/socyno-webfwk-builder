@@ -1,7 +1,7 @@
 #/bin/bash
 
 cd "$(dirname $0)" && \
-    export WORKDIR=$(pwd) && \
+    export WORKDIR="$(pwd)" && \
     export WORKSPACE="/opt/workspace" && \
     export MVNSETTINGS="$WORKSPACE/maven-settigs.xml" && \
     mkdir -p "$WORKSPACE" && cd "$WORKSPACE" && \
@@ -55,4 +55,4 @@ cd "$(dirname $0)" && \
         git fetch origin && \
         git reset --hard FETCH_HEAD && git clean -dfx && git checkout -B master origin/master && \
         mvn -s "$MVNSETTINGS" clean install && \
-    cp -f "targat/socyno-webfwk*.war" "$WORKDIR/webfwk.war"
+    cp -f "targat/socyno-webfwk*.war" "$WORKSPACE/webfwk.war"
