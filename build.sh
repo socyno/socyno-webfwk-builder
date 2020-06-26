@@ -55,4 +55,4 @@ cd "$(dirname $0)" && \
         git fetch origin && \
         git reset --hard FETCH_HEAD && git clean -dfx && git checkout -B master origin/master && \
         mvn -s "$MVNSETTINGS" clean install && \
-    cp -f "targat/socyno-webfwk*.war" "$WORKSPACE/webfwk.war"
+    cp -f target/socyno-webfwk-app-*.war "$WORKSPACE/webfwk.war"
