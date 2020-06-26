@@ -1,0 +1,7 @@
+FROM codenvy/jdk8_maven3_tomcat8
+
+ADD h2.tar /opt/h2tmpl/
+ADD build.sh /opt/start.sh
+ADD socyno-webfwk.trace.db /opt/h2tmpl/bin/
+VOLUME /opt/h2/
+CMD [ "bash", "/opt/start.sh" ]
