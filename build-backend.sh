@@ -50,13 +50,14 @@ cd "$(dirname $0)" && \
         { git remote remove origin; git remote add origin https://github.com/socyno/socyno-webfwk-app.git; } && \
         git fetch origin && \
         git reset --hard FETCH_HEAD && git clean -dfx && git checkout -B master origin/master && \
-    echo '#!/bin/bash' > "$BUILDSCRIPT" && \
-    echo 'for proj in "socyno-jjschema socyno-baseutils socyno-webutils socyno-statemachine socyno-webfwk socyno-webfwk-app"; do' >> "$BUILDSCRIPT" && \
-    echo '    cd "/opt/workspace/$proj" && mvn -s ../maven-settings.xml clen install || exit $?' >> "$BUILDSCRIPT" && \
+    echo '#!/bin/sh' > "$BUILDSCRIPT" && \
+    echo 'projects=(socyno-jjschema socyno-baseutils socyno-webutils socyno-statemachine socyno-webfwk socyno-webfwk-app)' >> "$BUILDSCRIPT" && \
+    echo 'for proj in "${projects[@]}"; do' >> "$BUILDSCRIPT" && \
+    echo '    cd "/opt/workspace/$proj" && mvn -s ../maven-settings.xml clean install || exit $?' >> "$BUILDSCRIPT" && \
     echo 'done' >> "$BUILDSCRIPT" && \
     echo 'cp -f target/socyno-webfwk-app-*.war /opt/workspace/webfwk.war' >>"$BUILDSCRIPT" && \
-    docker run --rm -it -u root -v "$WORKSPACE:/opt/workspace" maven:3.6.3-jdk-8 bash /opt/workspace/build.sh \
-    cd "$WORKDID/docker" && cp /opt/workspace/webfwk.war . && docker build -t socyno.org/webfwk .
+    docker run --rm -it -u root -v "$WORKSPACE:/opt/workspace" maven:3.6.3-jdk-8 /bin/sh /opt/workspace/build.sh \
+    cd "$WORKDID/docker" && cp "$WORKSPACE/webfwk.war" . && docker build -t socyno.org/webfwk .
 STATUS=$?
 rm -f webfwk.war
 exit $STATUS
