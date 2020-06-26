@@ -28,5 +28,5 @@ mkdir -p /opt/h2 && chown -R 1:1 /opt/h2 \
           -v /opt/log/webfwk:/var/log/socyno-webfwk-app \
           --network webfwk-network --network-alias webfwk-app \
           -u 1 --rm socyno.org/webfwk \
-    && docker run --name webfwk-static -p 80:80 -d \
+    && docker run --name webfwk-static -p 443:443 -d \
           --network webfwk-network --rm socyno.org/webfwk-static

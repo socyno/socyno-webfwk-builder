@@ -29,9 +29,9 @@ if [ "$BUILDLESS" != "yes" ]; then
 fi
 
 cd "$WORKDIR/docker" \
+    && cp -f "$WORKSPACE"/webfwk-cert-*.pem . \
     && cp -f "$WORKSPACE/webfwk-static.tar" . \
     && docker build -t socyno.org/webfwk-static -t socyno.org/webfwk-static:$(date '+%Y-%m-%d_%H-%M')  -f Dockerfile-static .
 STATUS=$?
-rm -f webfwk-static.tar
+rm -f webfwk-static.tar cert-*.pem
 exit $STATUS
-
