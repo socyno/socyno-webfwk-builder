@@ -3,7 +3,7 @@
 cd "$(dirname $0)" && \
     export WORKDIR="$(pwd)" && \
     export WORKSPACE="/opt/workspace" && \
-    export BUILDSCRIPT="$WORKSPACE/build.sh" && \
+    export BUILDSCRIPT="$WORKSPACE/build-webfwk-backend.sh" && \
     export MVNSETTINGS="$WORKSPACE/maven-settigs.xml" && \
     mkdir -p "$WORKSPACE" && cd "$WORKSPACE" && \
     echo '<?xml version="1.0" encoding="UTF-8"?>' >"$MVNSETTINGS" && \
@@ -51,12 +51,14 @@ cd "$(dirname $0)" && \
         git fetch origin && \
         git reset --hard FETCH_HEAD && git clean -dfx && git checkout -B master origin/master && \
     echo '#!/bin/sh' > "$BUILDSCRIPT" && \
-    echo 'projects=(socyno-jjschema socyno-baseutils socyno-webutils socyno-statemachine socyno-webfwk socyno-webfwk-app)' >> "$BUILDSCRIPT" && \
-    echo 'for proj in "${projects[@]}"; do' >> "$BUILDSCRIPT" && \
-    echo '    cd "/opt/workspace/$proj" && mvn -s ../maven-settings.xml clean install || exit $?' >> "$BUILDSCRIPT" && \
-    echo 'done' >> "$BUILDSCRIPT" && \
-    echo 'cp -f target/socyno-webfwk-app-*.war /opt/workspace/webfwk.war' >>"$BUILDSCRIPT" && \
-    docker run --rm -it -u root -v "$WORKSPACE:/opt/workspace" maven:3.6.3-jdk-8 /bin/sh /opt/workspace/build.sh \
+    echo "cd '$WORKSPACE/socyno-jjschema' && mvn -s ../maven-settings.xml clean install || exit \$?" >> "$BUILDSCRIPT" && \
+    echo "cd '$WORKSPACE/socyno-baseutils' && mvn -s ../maven-settings.xml clean install || exit \$?" >> "$BUILDSCRIPT" && \
+    echo "cd '$WORKSPACE/socyno-webutils' && mvn -s ../maven-settings.xml clean install || exit \$?" >> "$BUILDSCRIPT" && \
+    echo "cd '$WORKSPACE/socyno-statemachine' && mvn -s ../maven-settings.xml clean install || exit \$?" >> "$BUILDSCRIPT" && \
+    echo "cd '$WORKSPACE/socyno-webfwk' && mvn -s ../maven-settings.xml clean install || exit \$?" >> "$BUILDSCRIPT" && \
+    echo "cd '$WORKSPACE/socyno-webfwk-app' && mvn -s ../maven-settings.xml clean install || exit \$?" >> "$BUILDSCRIPT" && \
+    echo "cp -f target/socyno-webfwk-app-*.war '$WORKSPACE/webfwk.war' || exit \$?" >>"$BUILDSCRIPT" && \
+    docker run --rm -it -u root -v "$WORKSPACE:$WORKSPACE" maven:3.6.3-jdk-8 /bin/sh "$BUILDSCRIPT" \
     cd "$WORKDID/docker" && cp "$WORKSPACE/webfwk.war" . && docker build -t socyno.org/webfwk .
 STATUS=$?
 rm -f webfwk.war
