@@ -5,9 +5,13 @@ cd "$(dirname $0)" \
     || exit $?
 
 if [ "$1" != "buildless" ]; then
-    bash build-using-docker.sh \ 
-        && cp /opt/workspace/webfwk.war "$WORKDIR/docker/" \
+    bash build-using-docker.sh \
         || exit $?
 fi
 
-cd "$WORKDIR/docker/" && docker build .
+cd "$WORKDIR/docker/" \
+    && cp /opt/workspace/webfwk.war . \
+    && docker build -t socyno.org/webfwk .
+STATUS=$?
+rm -f webfwk.war
+exit $STATUS
